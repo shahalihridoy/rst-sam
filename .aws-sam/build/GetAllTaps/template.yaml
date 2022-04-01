@@ -13,6 +13,7 @@ Resources:
   GetAllTaps:
     Type: AWS::Serverless::Function
     Properties:
+      Role: arn:aws:iam::055447539290:role/Read_DDB
       Handler: src/handlers/get-all-taps-by-id.handler
       Runtime: nodejs14.x
       Architectures:

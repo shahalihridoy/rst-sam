@@ -6,22 +6,15 @@ exports.handler = async () => {
   AWS.config.update({
     region: 'us-east-2'
   })
-
   const params = {
     TableName: BOARDS_TABLE,
-    FilterExpression: '#x = :device',
+    FilterExpression: '#x = :device and attribute_not_exists(#y)',
     ExpressionAttributeNames: {
-      '#x': 'device_id'
+      '#x': 'device_id',
+      '#y': 'device_data_raw'
     },
     ExpressionAttributeValues: {
       ':device': 'test_modem2'
-    }
-  }
-
-  if (!BOARDS_TABLE) {
-    return {
-      statusCode: 200,
-      body: 'boards table not found'
     }
   }
 
@@ -35,7 +28,9 @@ exports.handler = async () => {
       body: JSON.stringify(data)
     }
   } catch (error) {
-    console.log(error)
-    throw new Error(error)
+    return {
+      statusCode: 500,
+      body: JSON.stringify(error)
+    }
   }
 }
