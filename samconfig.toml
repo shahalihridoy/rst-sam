@@ -8,6 +8,6 @@ s3_prefix = "rst-cleantech"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-disable_rollback = true
+disable_rollback = false
 parameter_overrides = "BoardTable=\"Boards_data\""
 image_repositories = []

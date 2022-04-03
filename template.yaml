@@ -28,5 +28,5 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /
+            Path: /{id}
             Method: GET
