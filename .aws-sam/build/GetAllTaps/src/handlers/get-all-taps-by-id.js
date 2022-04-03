@@ -19,21 +19,28 @@ exports.handler = async (events) => {
     ScanIndexForward: false,
     Limit: 1,
   };
+  const headers = {
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "OPTIONS,GET",
+  };
 
   try {
     const data = await ddb
       .query(params)
       .promise()
-      .then((data) => data.Items);
+      .then((data) => data.Items?.[0] || null);
 
     return {
       statusCode: 200,
       body: JSON.stringify(data),
+      headers,
     };
   } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify(error),
+      headers,
     };
   }
 };
