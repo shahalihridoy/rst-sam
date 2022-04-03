@@ -9,22 +9,23 @@ exports.handler = async (events) => {
   const { BOARDS_TABLE } = process.env;
   const params = {
     TableName: BOARDS_TABLE,
-    FilterExpression: "#x = :device and attribute_not_exists(#y)",
+    KeyConditionExpression: "#device_id = :device",
     ExpressionAttributeNames: {
-      "#x": "device_id",
-      "#y": "device_data_raw",
+      "#device_id": "device_id",
     },
     ExpressionAttributeValues: {
       ":device": boardId,
     },
+    ScanIndexForward: false,
     Limit: 1,
   };
 
   try {
     const data = await ddb
-      .scan(params)
+      .query(params)
       .promise()
       .then((data) => data.Items);
+
     return {
       statusCode: 200,
       body: JSON.stringify(data),
