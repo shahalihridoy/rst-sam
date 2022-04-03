@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const ddb = new AWS.DynamoDB.DocumentClient();
+const parse = AWS.DynamoDB.Converter.unmarshall;
 AWS.config.update({
   region: "us-east-2",
 });
@@ -29,7 +30,14 @@ exports.handler = async (events) => {
     const data = await ddb
       .query(params)
       .promise()
-      .then((data) => data.Items?.[0] || null);
+      .then((data) => {
+        if (data.Items.length > 0) {
+          const item = data.Items[0];
+          const device_data = parse(item.device_data);
+          return { ...item, device_data };
+        }
+        return null;
+      });
 
     return {
       statusCode: 200,
